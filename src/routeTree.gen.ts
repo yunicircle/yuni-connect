@@ -15,12 +15,16 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedCommunityRouteImport } from './routes/_authenticated/community'
+import { Route as AuthenticatedDatingRouteImport } from './routes/_authenticated/dating'
+import { Route as AuthenticatedDiscoverRouteImport } from './routes/_authenticated/discover'
 import { Route as AuthenticatedEventsRouteImport } from './routes/_authenticated/events'
 import { Route as AuthenticatedFundingRouteImport } from './routes/_authenticated/funding'
+import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
 import { Route as AuthenticatedMembersRouteImport } from './routes/_authenticated/members'
 import { Route as AuthenticatedMessagesRouteImport } from './routes/_authenticated/messages'
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
 import { Route as AuthenticatedOpportunitiesRouteImport } from './routes/_authenticated/opportunities'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedRightsRouteImport } from './routes/_authenticated/rights'
 
 const IndexRoute = IndexRouteImport.update({
@@ -52,6 +56,16 @@ const AuthenticatedCommunityRoute = AuthenticatedCommunityRouteImport.update({
   path: '/community',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDatingRoute = AuthenticatedDatingRouteImport.update({
+  id: '/dating',
+  path: '/dating',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDiscoverRoute = AuthenticatedDiscoverRouteImport.update({
+  id: '/discover',
+  path: '/discover',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedEventsRoute = AuthenticatedEventsRouteImport.update({
   id: '/events',
   path: '/events',
@@ -60,6 +74,11 @@ const AuthenticatedEventsRoute = AuthenticatedEventsRouteImport.update({
 const AuthenticatedFundingRoute = AuthenticatedFundingRouteImport.update({
   id: '/funding',
   path: '/funding',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedHomeRoute = AuthenticatedHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedMembersRoute = AuthenticatedMembersRouteImport.update({
@@ -84,6 +103,11 @@ const AuthenticatedOpportunitiesRoute =
     path: '/opportunities',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedRightsRoute = AuthenticatedRightsRouteImport.update({
   id: '/rights',
   path: '/rights',
@@ -96,12 +120,16 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/community': typeof AuthenticatedCommunityRoute
+  '/dating': typeof AuthenticatedDatingRoute
+  '/discover': typeof AuthenticatedDiscoverRoute
   '/events': typeof AuthenticatedEventsRoute
   '/funding': typeof AuthenticatedFundingRoute
+  '/home': typeof AuthenticatedHomeRoute
   '/members': typeof AuthenticatedMembersRoute
   '/messages': typeof AuthenticatedMessagesRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/opportunities': typeof AuthenticatedOpportunitiesRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/rights': typeof AuthenticatedRightsRoute
 }
 export interface FileRoutesByTo {
@@ -110,12 +138,16 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/community': typeof AuthenticatedCommunityRoute
+  '/dating': typeof AuthenticatedDatingRoute
+  '/discover': typeof AuthenticatedDiscoverRoute
   '/events': typeof AuthenticatedEventsRoute
   '/funding': typeof AuthenticatedFundingRoute
+  '/home': typeof AuthenticatedHomeRoute
   '/members': typeof AuthenticatedMembersRoute
   '/messages': typeof AuthenticatedMessagesRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/opportunities': typeof AuthenticatedOpportunitiesRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/rights': typeof AuthenticatedRightsRoute
 }
 export interface FileRoutesById {
@@ -126,12 +158,16 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/community': typeof AuthenticatedCommunityRoute
+  '/_authenticated/dating': typeof AuthenticatedDatingRoute
+  '/_authenticated/discover': typeof AuthenticatedDiscoverRoute
   '/_authenticated/events': typeof AuthenticatedEventsRoute
   '/_authenticated/funding': typeof AuthenticatedFundingRoute
+  '/_authenticated/home': typeof AuthenticatedHomeRoute
   '/_authenticated/members': typeof AuthenticatedMembersRoute
   '/_authenticated/messages': typeof AuthenticatedMessagesRoute
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/opportunities': typeof AuthenticatedOpportunitiesRoute
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/rights': typeof AuthenticatedRightsRoute
 }
 export interface FileRouteTypes {
@@ -142,12 +178,16 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/admin'
     | '/community'
+    | '/dating'
+    | '/discover'
     | '/events'
     | '/funding'
+    | '/home'
     | '/members'
     | '/messages'
     | '/notifications'
     | '/opportunities'
+    | '/profile'
     | '/rights'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -156,12 +196,16 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/admin'
     | '/community'
+    | '/dating'
+    | '/discover'
     | '/events'
     | '/funding'
+    | '/home'
     | '/members'
     | '/messages'
     | '/notifications'
     | '/opportunities'
+    | '/profile'
     | '/rights'
   id:
     | '__root__'
@@ -171,12 +215,16 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/_authenticated/admin'
     | '/_authenticated/community'
+    | '/_authenticated/dating'
+    | '/_authenticated/discover'
     | '/_authenticated/events'
     | '/_authenticated/funding'
+    | '/_authenticated/home'
     | '/_authenticated/members'
     | '/_authenticated/messages'
     | '/_authenticated/notifications'
     | '/_authenticated/opportunities'
+    | '/_authenticated/profile'
     | '/_authenticated/rights'
   fileRoutesById: FileRoutesById
 }
@@ -231,6 +279,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCommunityRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dating': {
+      id: '/_authenticated/dating'
+      path: '/dating'
+      fullPath: '/dating'
+      preLoaderRoute: typeof AuthenticatedDatingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/discover': {
+      id: '/_authenticated/discover'
+      path: '/discover'
+      fullPath: '/discover'
+      preLoaderRoute: typeof AuthenticatedDiscoverRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/events': {
       id: '/_authenticated/events'
       path: '/events'
@@ -243,6 +305,13 @@ declare module '@tanstack/react-router' {
       path: '/funding'
       fullPath: '/funding'
       preLoaderRoute: typeof AuthenticatedFundingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/home': {
+      id: '/_authenticated/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof AuthenticatedHomeRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/members': {
@@ -273,6 +342,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOpportunitiesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/rights': {
       id: '/_authenticated/rights'
       path: '/rights'
@@ -286,24 +362,32 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedCommunityRoute: typeof AuthenticatedCommunityRoute
+  AuthenticatedDatingRoute: typeof AuthenticatedDatingRoute
+  AuthenticatedDiscoverRoute: typeof AuthenticatedDiscoverRoute
   AuthenticatedEventsRoute: typeof AuthenticatedEventsRoute
   AuthenticatedFundingRoute: typeof AuthenticatedFundingRoute
+  AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
   AuthenticatedMembersRoute: typeof AuthenticatedMembersRoute
   AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRoute
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
   AuthenticatedOpportunitiesRoute: typeof AuthenticatedOpportunitiesRoute
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedRightsRoute: typeof AuthenticatedRightsRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedCommunityRoute: AuthenticatedCommunityRoute,
+  AuthenticatedDatingRoute: AuthenticatedDatingRoute,
+  AuthenticatedDiscoverRoute: AuthenticatedDiscoverRoute,
   AuthenticatedEventsRoute: AuthenticatedEventsRoute,
   AuthenticatedFundingRoute: AuthenticatedFundingRoute,
+  AuthenticatedHomeRoute: AuthenticatedHomeRoute,
   AuthenticatedMembersRoute: AuthenticatedMembersRoute,
   AuthenticatedMessagesRoute: AuthenticatedMessagesRoute,
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
   AuthenticatedOpportunitiesRoute: AuthenticatedOpportunitiesRoute,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedRightsRoute: AuthenticatedRightsRoute,
 }
 
