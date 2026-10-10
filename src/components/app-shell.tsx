@@ -67,7 +67,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl px-4 pb-28 pt-6 md:ml-64 md:px-8 md:pb-12 lg:mx-auto lg:pl-72">{children}</main>
+      <div className="md:pl-64"><main className="mx-auto max-w-5xl px-4 pb-28 pt-6 md:px-8 md:pb-12">{children}</main></div>
 
       <nav aria-label="Primary" className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-5 border-t bg-card pb-[env(safe-area-inset-bottom)] md:hidden">
         {main.map((l) => (
