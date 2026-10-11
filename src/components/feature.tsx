@@ -39,7 +39,7 @@ export type FeatureTab = { value: string; label: string; icon: LucideIcon; empty
 
 export function FeatureTabs({ tabs }: { tabs: FeatureTab[] }) {
   return (
-    <Tabs defaultValue={tabs[0]?.value}>
+    <Tabs defaultValue={tabs[0]?.value ?? ""}>
       <TabsList className="mb-4 flex h-auto w-full flex-wrap justify-start gap-1 bg-muted p-1">
         {tabs.map((t) => (
           <TabsTrigger key={t.value} value={t.value} className="rounded-lg">{t.label}</TabsTrigger>

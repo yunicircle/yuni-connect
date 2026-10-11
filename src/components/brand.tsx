@@ -1,12 +1,13 @@
 import { Link } from "@tanstack/react-router";
+import logo from "@/assets/yuni-logo.jpeg.asset.json";
 
 export function Brand({ to = "/" }: { to?: "/" | "/home" }) {
   return (
-    <Link to={to} className="flex items-center gap-2 font-display text-xl font-semibold text-foreground">
-      <span className="relative inline-flex h-7 w-7 items-center justify-center rounded-full bg-rainbow p-[3px]">
-        <span className="h-full w-full rounded-full bg-background" />
-      </span>
+    <Link to={to} className="flex items-center gap-2 font-display text-xl font-semibold text-foreground" aria-label="Yuni Circle home">
+      <img src={logo.url} alt="" className="h-10 w-10 rounded-lg object-cover object-top mix-blend-multiply" />
       Yuni Circle
     </Link>
   );
 }
+
+export const logoUrl = logo.url;
