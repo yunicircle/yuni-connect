@@ -10,7 +10,7 @@ export const Route = createFileRoute("/")({
 });
 
 const features = [
-  { icon: Users, title: "Community", text: "Groups, conversations and members who share your interests." },
+  { icon: Users, title: "Community", text: "Pick a username, find friends, follow people and grow your circle." },
   { icon: CalendarDays, title: "Events", text: "Meetups, workshops and virtual gatherings near you." },
   { icon: Heart, title: "Dating (optional)", text: "A separate, opt-in space for adults. Off by default." },
   { icon: Scale, title: "Rights & support", text: "Know your rights and reach verified support organisations." },
