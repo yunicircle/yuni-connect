@@ -1,5 +1,13 @@
 {
   "version": "7",
   "dialect": "postgresql",
-  "entries": []
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1791821810174,
+      "tag": "0000_profiles_follows_photos_announcements",
+      "breakpoints": true
+    }
+  ]
 }
