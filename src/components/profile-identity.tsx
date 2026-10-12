@@ -34,11 +34,11 @@ export function ProfileIdentity() {
   async function save() {
     if (!me) return;
     const username = form.username.trim().toLowerCase();
-    if (!/^[a-z0-9_]{3,24}$/.test(username)) return toast.error("Username: 3–24 lowercase letters, numbers or _");
+    if (!/^[a-z0-9_]{3,24}$/.test(username)) { toast.error("Username: 3–24 lowercase letters, numbers or _"); return; }
     setSaving(true);
     const { error } = await supabase.from("profiles").update({ username, display_name: form.display_name.trim(), bio: form.bio.trim() }).eq("id", me);
     setSaving(false);
-    if (error) return toast.error(error.code === "23505" ? "That username is taken" : error.message);
+    if (error) { toast.error(error.code === "23505" ? "That username is taken" : error.message); return; }
     toast.success("Profile saved");
     qc.invalidateQueries({ queryKey: ["profiles"] });
   }
