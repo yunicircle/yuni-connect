@@ -16,7 +16,7 @@ const main = [
 ] as const;
 
 const more = [
-  { to: "/members", label: "Members", icon: Search },
+  { to: "/members", label: "Find friends", icon: Search },
   { to: "/messages", label: "Messages", icon: MessageCircle },
   { to: "/dating", label: "Dating", icon: Heart },
   { to: "/opportunities", label: "Opportunities", icon: Briefcase },
