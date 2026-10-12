@@ -5,6 +5,10 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { PageHeader } from "@/components/feature";
+import { ProfileIdentity } from "@/components/profile-identity";
+import { supabase } from "@/integrations/supabase/client";
+import { useEffect } from "react";
+import { useMe } from "@/lib/social";
 import { meta } from "@/lib/meta";
 
 export const Route = createFileRoute("/_authenticated/profile")({
@@ -28,12 +32,19 @@ const areas = [
 
 function Page() {
   const [vis, setVis] = useState<Record<string, Level>>({ profile: "connections", posts: "connections", groups: "only_me", events: "only_me" });
-  const [discoverable, setDiscoverable] = useState(false);
+  const [discoverable, setDiscoverable] = useState(true);
+  const { data: me } = useMe();
+  useEffect(() => { if (me) supabase.from("profiles").select("discoverable").eq("id", me).single().then(({ data }) => data && setDiscoverable(data.discoverable)); }, [me]);
+  async function setDisc(v: boolean) {
+    setDiscoverable(v);
+    if (me) { const { error } = await supabase.from("profiles").update({ discoverable: v }).eq("id", me); if (error) toast.error(error.message); else toast.success(v ? "You now appear in search" : "Hidden from search"); }
+  }
   const soon = () => toast.info("This will be saved once your account data is connected.");
 
   return (
     <div className="space-y-8">
-      <PageHeader title="Your profile & privacy" description="You decide who sees what. Everything starts private." />
+      <PageHeader title="Your profile & privacy" description="You decide who sees what." />
+      <ProfileIdentity />
 
       <section className="rounded-3xl border bg-card p-6 shadow-soft">
         <div className="flex items-center gap-2"><Eye className="h-5 w-5 text-primary" aria-hidden /><h2 className="text-xl font-semibold">Who can see me right now</h2></div>
@@ -72,8 +83,8 @@ function Page() {
           </fieldset>
         ))}
         <div className="flex items-center justify-between rounded-2xl border bg-card p-4">
-          <div><p className="font-semibold">Show me in member search</p><p className="text-sm text-muted-foreground">Off by default.</p></div>
-          <Switch checked={discoverable} onCheckedChange={setDiscoverable} aria-label="Show me in member search" />
+          <div><p className="font-semibold">Show me in member search</p><p className="text-sm text-muted-foreground">Lets people find you by username in Find friends and Discover.</p></div>
+          <Switch checked={discoverable} onCheckedChange={setDisc} aria-label="Show me in member search" />
         </div>
         <Button onClick={soon}>Save privacy settings</Button>
       </section>

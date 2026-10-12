@@ -5,12 +5,12 @@ import { Brand } from "@/components/brand";
 import { meta } from "@/lib/meta";
 
 export const Route = createFileRoute("/")({
-  head: () => meta("Connect. Belong. Thrive.", "Yuni Circle is a privacy-first LGBTQ+ community for connection, events, rights, opportunities and mutual support."),
+  head: () => meta("Connect. Belong. Thrive.", "Yuni Circle is a privacy-first, global LGBTQ+ community for connection, events, rights, opportunities and mutual support."),
   component: Landing,
 });
 
 const features = [
-  { icon: Users, title: "Community", text: "Groups, conversations and members who share your interests." },
+  { icon: Users, title: "Community", text: "Pick a username, find friends, follow people and grow your circle." },
   { icon: CalendarDays, title: "Events", text: "Meetups, workshops and virtual gatherings near you." },
   { icon: Heart, title: "Dating (optional)", text: "A separate, opt-in space for adults. Off by default." },
   { icon: Scale, title: "Rights & support", text: "Know your rights and reach verified support organisations." },
@@ -30,7 +30,7 @@ function Landing() {
         </div>
       </header>
       <section className="mx-auto max-w-6xl px-4 pb-16 pt-10 md:pt-20">
-        <p className="mb-4 inline-flex rounded-full bg-primary-soft px-3 py-1 text-sm font-medium text-primary">Launching in Kenya · Built for everywhere</p>
+        <p className="mb-4 inline-flex rounded-full bg-primary-soft px-3 py-1 text-sm font-medium text-primary">A global LGBTQ+ community</p>
         <h1 className="max-w-3xl text-5xl font-semibold leading-[1.05] md:text-7xl">Connect. Belong. <span className="text-primary">Thrive.</span></h1>
         <p className="mt-6 max-w-xl text-lg text-muted-foreground">A safe, private home for LGBTQ+ people and allies. You decide what others see, from your name to whether you can be found at all.</p>
         <div className="mt-8 flex flex-wrap gap-3">
