@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Discover uses existing discoverable profile queries and announcements as its post source; do not invent member posts or social engagement without a supported data source.
+- Discover post bookmarks are device-local and user-scoped; store IDs only to avoid persisting sensitive post content.
