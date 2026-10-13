@@ -1,11 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
-import { ArrowRight, ArrowLeft, Bookmark, Search, Sparkles, X, Megaphone, Heart, Briefcase, Scale, HandCoins, Users, CalendarDays, RefreshCw, Compass } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowRight, Bookmark, Search, Sparkles, X, Megaphone, Heart, Briefcase, Scale, HandCoins, Users, CalendarDays, RefreshCw, Compass } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ProfileCard } from "@/components/profile-card";
+import { SuggestedPeople, SuggestedPhotos, useDiscoveryPhotos } from "@/components/discover-people";
+import { eligibleProfiles } from "@/lib/discover-feed";
 import { DiscoverPostCard } from "@/components/discover-post";
 import { supabase } from "@/integrations/supabase/client";
 import { useMe, useMyFollowing, useProfiles } from "@/lib/social";
@@ -30,7 +31,6 @@ function Page() {
   const [search, setSearch] = useState("");
   const [feed, setFeed] = useState("latest");
   const [bookmarks, setBookmarks] = useState<{ user: string; ids: string[] } | null>(null);
-  const scroller = useRef<HTMLDivElement>(null);
   const { data: me } = useMe();
   const following = useMyFollowing(me);
   const profiles = useProfiles({ search: search.replace(/^@/, "") });
@@ -66,6 +66,8 @@ function Page() {
     try { localStorage.setItem(`yuni:discover:saved:${me}`, JSON.stringify(ids)); } catch { /* Keep working in memory when device storage is unavailable. */ }
   }
   const suggested = (profiles.data ?? []).filter((p) => p.id !== me && (search || !following.data?.has(p.id))).sort((a, b) => b.followers - a.followers);
+  const photoProfiles = eligibleProfiles(profiles.data ?? [], me, following.data ?? new Set());
+  const photoQuery = useDiscoveryPhotos(photoProfiles, me);
   const posts = (announcements.data ?? []).filter((post) => feed !== "saved" || saved.includes(post.id));
 
   return (
@@ -86,15 +88,11 @@ function Page() {
       <section aria-labelledby="profiles-heading">
         <div className="mb-4 flex items-center justify-between gap-3">
           <h2 id="profiles-heading" className="flex items-center gap-2 text-xl font-semibold"><Sparkles className="size-5 text-primary" aria-hidden />{search ? "People you’re looking for" : "Suggested profiles"}</h2>
-          <div className="flex shrink-0 gap-1">
-            <Button variant="outline" size="icon" aria-label="Previous profiles" title="Previous profiles" onClick={() => scroller.current?.scrollBy({ left: -320, behavior: "smooth" })}><ArrowLeft /></Button>
-            <Button variant="outline" size="icon" aria-label="Next profiles" title="Next profiles" onClick={() => scroller.current?.scrollBy({ left: 320, behavior: "smooth" })}><ArrowRight /></Button>
-          </div>
         </div>
         {profiles.isError ? <ErrorNotice text="Profiles couldn't load." onRetry={() => profiles.refetch()} />
-          : profiles.isPending || following.isPending ? <div className="grid animate-pulse gap-3 sm:grid-cols-2" role="status" aria-label="Loading profiles">{[0, 1].map((i) => <div key={i} className="h-24 rounded-lg bg-muted" />)}</div>
-          : suggested.length ? <div ref={scroller} className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-3" aria-label="Suggested profiles">{suggested.map((p) => <div key={p.id} className="w-full min-w-0 shrink-0 snap-start sm:w-[calc(50%-6px)]"><ProfileCard p={p} /></div>)}</div>
-          : <QuietState icon={Users} title={search ? "No matching friends" : "Your next connection is on its way"} text={search ? "Try another name or username." : "No new suggested profiles right now."}><Button asChild variant="outline" size="sm"><Link to="/members">Browse members<ArrowRight /></Link></Button></QuietState>}
+          : profiles.isPending ? <div className="h-48 animate-pulse rounded-lg bg-muted" role="status" aria-label="Loading profiles" />
+          : <SuggestedPeople profiles={suggested} photos={photoQuery.data ?? []} me={me} searching={!!search} />}
+
       </section>
 
       <section aria-labelledby="posts-heading">
@@ -104,12 +102,13 @@ function Page() {
         </div>
         <Tabs value={feed} onValueChange={setFeed} className="mb-5">
           <TabsList className="h-auto flex-wrap justify-start gap-1 bg-muted p-1">
-            <TabsTrigger value="latest" className="gap-2"><Sparkles className="size-4" />For you</TabsTrigger>
+            <TabsTrigger value="latest" className="gap-2"><Sparkles className="size-4" />Photos</TabsTrigger>
             <TabsTrigger value="announcements" className="gap-2"><Megaphone className="size-4" />Announcements</TabsTrigger>
             <TabsTrigger value="saved" className="gap-2"><Bookmark className="size-4" />Saved{saved.length > 0 ? ` (${saved.length})` : ""}</TabsTrigger>
           </TabsList>
         </Tabs>
-        {announcements.isError ? <ErrorNotice text="Posts couldn't load." onRetry={() => announcements.refetch()} />
+        {feed === "latest" ? <SuggestedPhotos photos={photoQuery.data ?? []} me={me} loading={photoQuery.isLoading || profiles.isPending || following.isPending} error={photoQuery.isError || profiles.isError || following.isError} onRetry={() => { photoQuery.refetch(); profiles.refetch(); following.refetch(); }} />
+          : announcements.isError ? <ErrorNotice text="Posts couldn't load." onRetry={() => announcements.refetch()} />
           : announcements.isPending ? <div role="status" aria-label="Loading posts" className="h-48 animate-pulse rounded-lg bg-muted" />
           : posts.length ? <div className="grid items-start gap-4 lg:grid-cols-2">{posts.map((post) => <DiscoverPostCard key={post.id} post={post} saved={saved.includes(post.id)} onSave={() => toggleSave(post.id)} />)}</div>
           : <QuietState icon={feed === "saved" ? Bookmark : Megaphone} title={feed === "saved" ? "Your saved posts" : "A fresh chapter is coming"} text={feed === "saved" ? "No posts saved on this device yet." : "No announcements have been published yet."}>{feed === "saved" ? <Button size="sm" variant="outline" onClick={() => setFeed("latest")}>Back to posts<ArrowRight /></Button> : <Button asChild size="sm" variant="outline"><Link to="/community">Visit the community<ArrowRight /></Link></Button>}</QuietState>}
