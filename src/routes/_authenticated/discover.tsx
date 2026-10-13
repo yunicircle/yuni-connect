@@ -58,7 +58,7 @@ function Page() {
       document.getElementById(window.location.hash.slice(1))?.scrollIntoView({ block: "center" });
     }
   }, [announcements.data]);
-  const saved = bookmarks?.user === me ? bookmarks.ids : [];
+  const saved = bookmarks && bookmarks.user === me ? bookmarks.ids : [];
   function toggleSave(id: string) {
     if (!me) return;
     const ids = saved.includes(id) ? saved.filter((item) => item !== id) : [...saved, id];
