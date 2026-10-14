@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { ImagePlus, X } from "lucide-react";
+import { ImagePlus, X, Lock, Globe, Share2 } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
-import { MAX_PHOTOS, formatCount, useMe, useProfiles } from "@/lib/social";
+import { MAX_PHOTOS, formatCount, profileUrl, shareProfile, useMe, useProfiles } from "@/lib/social";
 
 export function ProfileIdentity() {
   const qc = useQueryClient();
@@ -67,6 +69,13 @@ export function ProfileIdentity() {
   }
 
   const count = photos.data?.length ?? 0;
+  async function setPrivate(v: boolean) {
+    if (!me) return;
+    const { error } = await supabase.from("profiles").update({ is_private: v }).eq("id", me);
+    if (error) { toast.error(error.message); return; }
+    toast.success(v ? "Your account is now private" : "Your account is now public");
+    qc.invalidateQueries({ queryKey: ["profiles"] });
+  }
 
   return (
     <section className="rounded-3xl border bg-card p-6 shadow-soft">
@@ -74,6 +83,17 @@ export function ProfileIdentity() {
         <div><p className="text-2xl font-semibold">{p ? formatCount(p.followers) : "–"}</p><p className="text-sm text-muted-foreground">Followers</p></div>
         <div><p className="text-2xl font-semibold">{p ? formatCount(p.following) : "–"}</p><p className="text-sm text-muted-foreground">Following</p></div>
         <p className="text-xs text-muted-foreground">Follower counts are visible to all members.</p>
+      </div>
+
+      {p && <div className="mt-5 flex flex-wrap items-center gap-2 rounded-2xl bg-muted p-3 text-sm">
+        <span className="min-w-0 flex-1 truncate">Your link: <Link to="/u/$username" params={{ username: p.username }} className="font-medium text-primary underline-offset-2 hover:underline">{profileUrl(p.username).replace(/^https?:\/\//, "")}</Link></span>
+        <Button size="sm" variant="outline" onClick={async () => { const r = await shareProfile(p.username, p.display_name || p.username); if (r === "copied") toast.success("Profile link copied"); }}><Share2 className="h-4 w-4" />Share</Button>
+      </div>}
+
+      <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl border p-4">
+        <div className="flex items-start gap-3">{p?.is_private ? <Lock className="mt-0.5 h-5 w-5 text-primary" /> : <Globe className="mt-0.5 h-5 w-5 text-primary" />}
+          <div><p className="font-semibold">{p?.is_private ? "Private account" : "Public account"}</p><p className="text-sm text-muted-foreground">{p?.is_private ? "Only your followers can see your photos and bio. You won't appear in Discover photos." : "Any signed-in member can see your photos and bio."}</p></div></div>
+        <Switch checked={!!p?.is_private} disabled={!p} onCheckedChange={setPrivate} aria-label="Private account" />
       </div>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -105,7 +125,7 @@ export function ProfileIdentity() {
           ))}
           {Array.from({ length: MAX_PHOTOS - count }).map((_, i) => <div key={i} className="aspect-square rounded-xl border border-dashed" />)}
         </div>
-        <p className="mt-2 text-xs text-muted-foreground">Up to {MAX_PHOTOS} photos, 5 MB each. Only signed-in members can view them.</p>
+        <p className="mt-2 text-xs text-muted-foreground">Up to {MAX_PHOTOS} photos, 5 MB each. {p?.is_private ? "Only your followers can view them." : "Only signed-in members can view them."}</p>
       </div>
     </section>
   );

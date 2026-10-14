@@ -7,7 +7,7 @@ export function nextSuggestion<T extends { id: string }>(items: T[], currentId: 
 }
 
 export function eligibleProfiles(profiles: ProfileStat[], me: string | null | undefined, following: Set<string>) {
-  return profiles.filter((p) => p.discoverable && p.id !== me && !following.has(p.id));
+  return profiles.filter((p) => p.discoverable && !p.is_private && p.id !== me && !following.has(p.id));
 }
 
 export async function followThenAdvance(follow: () => Promise<unknown>, advance: () => void) {

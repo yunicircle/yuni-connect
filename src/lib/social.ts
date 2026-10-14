@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
 export type ProfileStat = {
-  id: string; username: string; display_name: string; bio: string; discoverable: boolean; followers: number; following: number;
+  id: string; username: string; display_name: string; bio: string; discoverable: boolean; is_private: boolean; followers: number; following: number;
 };
 
 export const MAX_PHOTOS = 5;
@@ -21,7 +21,7 @@ export function useProfiles(opts: { search?: string; top?: boolean; ids?: string
   return useQuery({
     queryKey: ["profiles", opts],
     queryFn: async (): Promise<ProfileStat[]> => {
-      let q = supabase.rpc("profile_stats").select("*");
+      let q = supabase.rpc("profile_directory").select("*");
       if (opts.ids) q = q.in("id", opts.ids.length ? opts.ids : ["00000000-0000-0000-0000-000000000000"]);
       else q = q.eq("discoverable", true);
       if (opts.search) {
@@ -62,6 +62,17 @@ export function useToggleFollow() {
       qc.invalidateQueries({ queryKey: ["profiles"] });
     },
   });
+}
+
+export function profileUrl(username: string) {
+  return `${typeof window !== "undefined" ? window.location.origin : ""}/u/${username}`;
+}
+
+export async function shareProfile(username: string, name: string) {
+  const url = profileUrl(username);
+  if (navigator.share) { try { await navigator.share({ title: `${name} on Yuni Circle`, url }); return "shared"; } catch { /* fall back to copy */ } }
+  await navigator.clipboard.writeText(url);
+  return "copied";
 }
 
 export function formatCount(n: number) {
