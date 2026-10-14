@@ -8,6 +8,13 @@
       "when": 1791821810174,
       "tag": "0000_profiles_follows_photos_announcements",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791999339531,
+      "tag": "0001_private_accounts_groups",
+      "breakpoints": true
     }
   ]
 }

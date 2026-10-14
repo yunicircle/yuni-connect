@@ -26,6 +26,7 @@ import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authen
 import { Route as AuthenticatedOpportunitiesRouteImport } from './routes/_authenticated/opportunities'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedRightsRouteImport } from './routes/_authenticated/rights'
+import { Route as AuthenticatedUUsernameRouteImport } from './routes/_authenticated/u.$username'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -113,6 +114,11 @@ const AuthenticatedRightsRoute = AuthenticatedRightsRouteImport.update({
   path: '/rights',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedUUsernameRoute = AuthenticatedUUsernameRouteImport.update({
+  id: '/u/$username',
+  path: '/u/$username',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -131,6 +137,7 @@ export interface FileRoutesByFullPath {
   '/opportunities': typeof AuthenticatedOpportunitiesRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/rights': typeof AuthenticatedRightsRoute
+  '/u/$username': typeof AuthenticatedUUsernameRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -149,6 +156,7 @@ export interface FileRoutesByTo {
   '/opportunities': typeof AuthenticatedOpportunitiesRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/rights': typeof AuthenticatedRightsRoute
+  '/u/$username': typeof AuthenticatedUUsernameRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -169,6 +177,7 @@ export interface FileRoutesById {
   '/_authenticated/opportunities': typeof AuthenticatedOpportunitiesRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/rights': typeof AuthenticatedRightsRoute
+  '/_authenticated/u/$username': typeof AuthenticatedUUsernameRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -189,6 +198,7 @@ export interface FileRouteTypes {
     | '/opportunities'
     | '/profile'
     | '/rights'
+    | '/u/$username'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -207,6 +217,7 @@ export interface FileRouteTypes {
     | '/opportunities'
     | '/profile'
     | '/rights'
+    | '/u/$username'
   id:
     | '__root__'
     | '/'
@@ -226,6 +237,7 @@ export interface FileRouteTypes {
     | '/_authenticated/opportunities'
     | '/_authenticated/profile'
     | '/_authenticated/rights'
+    | '/_authenticated/u/$username'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -356,6 +368,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRightsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/u/$username': {
+      id: '/_authenticated/u/$username'
+      path: '/u/$username'
+      fullPath: '/u/$username'
+      preLoaderRoute: typeof AuthenticatedUUsernameRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -373,6 +392,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedOpportunitiesRoute: typeof AuthenticatedOpportunitiesRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedRightsRoute: typeof AuthenticatedRightsRoute
+  AuthenticatedUUsernameRoute: typeof AuthenticatedUUsernameRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -389,6 +409,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedOpportunitiesRoute: AuthenticatedOpportunitiesRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedRightsRoute: AuthenticatedRightsRoute,
+  AuthenticatedUUsernameRoute: AuthenticatedUUsernameRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

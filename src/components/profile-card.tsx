@@ -1,4 +1,6 @@
 import { toast } from "sonner";
+import { Link } from "@tanstack/react-router";
+import { Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatCount, useMe, useMyFollowing, useToggleFollow, type ProfileStat } from "@/lib/social";
 
@@ -14,7 +16,7 @@ export function ProfileCard({ p }: { p: ProfileStat }) {
     <div className="flex items-center gap-3 rounded-2xl border bg-card p-4 shadow-soft">
       <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary-soft text-lg font-semibold text-primary" aria-hidden>{initial}</span>
       <div className="min-w-0 flex-1">
-        <p className="truncate font-semibold">{p.display_name || p.username}</p>
+        <Link to="/u/$username" params={{ username: p.username }} className="flex items-center gap-1 truncate font-semibold hover:underline">{p.display_name || p.username}{p.is_private && <Lock className="h-3 w-3 text-muted-foreground" aria-label="Private account" />}</Link>
         <p className="truncate text-sm text-muted-foreground">@{p.username}</p>
         <p className="text-xs text-muted-foreground"><span className="font-semibold text-foreground">{formatCount(p.followers)}</span> followers · {formatCount(p.following)} following</p>
       </div>

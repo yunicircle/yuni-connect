@@ -79,6 +79,80 @@ export type Database = {
           },
         ]
       }
+      group_members: {
+        Row: {
+          created_at: string
+          group_id: string
+          role: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          group_id: string
+          role?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          group_id?: string
+          role?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_members_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      groups: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          name: string
+          owner_id: string
+          visibility: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          id?: string
+          name: string
+          owner_id: string
+          visibility?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          name?: string
+          owner_id?: string
+          visibility?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "groups_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profile_photos: {
         Row: {
           created_at: string
@@ -115,6 +189,7 @@ export type Database = {
           discoverable: boolean
           display_name: string
           id: string
+          is_private: boolean
           username: string
         }
         Insert: {
@@ -123,6 +198,7 @@ export type Database = {
           discoverable?: boolean
           display_name?: string
           id: string
+          is_private?: boolean
           username: string
         }
         Update: {
@@ -131,6 +207,7 @@ export type Database = {
           discoverable?: boolean
           display_name?: string
           id?: string
+          is_private?: boolean
           username?: string
         }
         Relationships: []
@@ -158,12 +235,29 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_see_photos: { Args: { _owner: string }; Returns: boolean }
+      group_is_public: { Args: { _group: string }; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      is_group_member: { Args: { _group: string }; Returns: boolean }
+      is_group_owner: { Args: { _group: string }; Returns: boolean }
+      profile_directory: {
+        Args: never
+        Returns: {
+          bio: string
+          discoverable: boolean
+          display_name: string
+          followers: number
+          following: number
+          id: string
+          is_private: boolean
+          username: string
+        }[]
       }
       profile_stats: {
         Args: never
