@@ -102,7 +102,7 @@ function Page() {
         </div>
         <Tabs value={feed} onValueChange={setFeed} className="mb-5">
           <TabsList className="h-auto flex-wrap justify-start gap-1 bg-muted p-1">
-            <TabsTrigger value="latest" className="gap-2"><Sparkles className="size-4" />Photos</TabsTrigger>
+            <TabsTrigger value="latest" className="gap-2"><Sparkles className="size-4" />Explore</TabsTrigger>
             <TabsTrigger value="announcements" className="gap-2"><Megaphone className="size-4" />Announcements</TabsTrigger>
             <TabsTrigger value="saved" className="gap-2"><Bookmark className="size-4" />Saved{saved.length > 0 ? ` (${saved.length})` : ""}</TabsTrigger>
           </TabsList>
